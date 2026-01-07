@@ -1,0 +1,10 @@
+{
+  "name": "gerunds-infinitives-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gerunds & Infinitives test (HTML) + Vercel API + Telegram results",
+  "scripts": {
+    "dev": "npx vercel dev",
+    "deploy": "npx vercel --prod"
+  }
+}
