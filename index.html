@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerunds and Infinitives Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .option-correct { background-color: #d1fae5 !important; border-color: #10b981 !important; }
+        .option-incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; }
+        .pulse-animation { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .progress-bar { height: 8px; background-color: #e5e7eb; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background-color: #3b82f6; transition: width 0.3s ease; }
+        .violation-warning { animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-center min-h-screen p-4">
+
+    <!-- Violation Modal -->
+    <div id="violation-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 transform transition-all">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2" id="violation-title">Screen Switch Detected</h3>
+                <p class="text-gray-600 mb-4" id="violation-message">Please stay on this page during the test.</p>
+                <div class="mb-4">
+                    <div class="inline-flex items-center bg-yellow-50 px-3 py-1 rounded-full">
+                        <i class="fas fa-shield-alt text-yellow-600 mr-2"></i>
+                        <span class="text-yellow-700 font-medium">Violations: <span id="violation-count">0</span>/3</span>
+                    </div>
+                </div>
+                <button id="close-violation-modal" class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-6 rounded-lg transition duration-200">
+                    Acknowledge
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Modal -->
+    <div id="instructions-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40 p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-6 transform transition-all">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Test Instructions</h2>
+                <div class="w-16 h-1 bg-blue-500 mx-auto"></div>
+            </div>
+
+            <!-- Student Info -->
+            <div class="mb-6 bg-gray-50 border rounded-xl p-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Student name (optional)
+                </label>
+                <input id="student-name" type="text"
+                       class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                       placeholder="e.g., Azizbek">
+                <p class="text-xs text-gray-500 mt-2">
+                    This name will be included in the Telegram report.
+                </p>
+            </div>
+
+            <div class="space-y-4 mb-6">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-list-check text-blue-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Test Format</h3>
+                        <p class="text-gray-600">This test contains 25 questions about gerunds and infinitives. Choose the correct option for each sentence.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-clock text-green-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Timing</h3>
+                        <p class="text-gray-600">Complete the test at your own pace. There's no time limit, but try to maintain focus.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-ban text-red-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Screen Switching Rules</h3>
+                        <p class="text-gray-600">You are not allowed to switch tabs, windows, or applications during the test. The system will detect violations.</p>
+                        <ul class="text-gray-600 text-sm mt-1 ml-4 list-disc">
+                            <li>1st violation: Warning</li>
+                            <li>2nd violation: Final warning</li>
+                            <li>3rd violation: Test will be terminated</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="flex items-start">
+                    <div class="flex-shrink-0 w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-star text-purple-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Scoring</h3>
+                        <p class="text-gray-600">You'll receive immediate feedback after each answer. Your final score will be displayed at the end.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-4 border-t">
+                <div class="flex items-center">
+                    <i class="fas fa-user-graduate text-gray-400 mr-2"></i>
+                    <span class="text-sm text-gray-500">Academic Integrity Required</span>
+                </div>
+                <button id="start-test" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg transition duration-200 pulse-animation">
+                    Start Test <i class="fas fa-play ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Test Container -->
+    <div id="test-container" class="hidden bg-white rounded-2xl shadow-xl w-full max-w-4xl overflow-hidden">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold">Gerunds and Infinitives Test</h1>
+                    <div class="flex items-center mt-2">
+                        <i class="fas fa-graduation-cap mr-2"></i>
+                        <span>English Grammar Assessment</span>
+                    </div>
+                    <div class="mt-2 text-sm text-blue-100">
+                        Student: <span id="student-name-display" class="font-semibold">—</span>
+                    </div>
+                </div>
+                <div class="mt-4 md:mt-0 flex items-center space-x-4">
+                    <div class="text-center bg-blue-800 bg-opacity-30 px-4 py-2 rounded-lg">
+                        <div class="text-sm">Score</div>
+                        <div class="text-xl font-bold" id="score">0/25</div>
+                    </div>
+                    <div class="text-center bg-blue-800 bg-opacity-30 px-4 py-2 rounded-lg">
+                        <div class="text-sm">Progress</div>
+                        <div class="text-xl font-bold" id="progress">1/25</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="mt-4">
+                <div class="flex justify-between text-sm mb-1">
+                    <span>Question <span id="current-question-num">1</span> of 25</span>
+                    <span id="progress-percent">4%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 4%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Content -->
+        <div class="p-6">
+            <!-- Question Container -->
+            <div id="question-container" class="mb-6"></div>
+
+            <!-- Feedback Container -->
+            <div id="feedback" class="mt-6 p-4 rounded-lg border hidden"></div>
+
+            <!-- Telegram Status -->
+            <div id="telegram-status" class="mt-6 hidden p-4 rounded-lg border"></div>
+
+            <!-- Stats Bar -->
+            <div class="mt-6 p-4 bg-gray-50 rounded-lg flex flex-wrap items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                        <span class="text-sm text-gray-700">Correct: <span id="correct-count">0</span></span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                        <span class="text-sm text-gray-700">Incorrect: <span id="incorrect-count">0</span></span>
+                    </div>
+                </div>
+                <div class="flex items-center mt-2 sm:mt-0">
+                    <i class="fas fa-eye-slash text-yellow-500 mr-2"></i>
+                    <span class="text-sm text-gray-700">Focus: <span id="focus-status" class="font-medium">Good</span></span>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex flex-col sm:flex-row justify-between mt-8 space-y-4 sm:space-y-0">
+                <div>
+                    <button id="prev-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-5 py-3 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center" disabled>
+                        <i class="fas fa-arrow-left mr-2"></i> Previous
+                    </button>
+                </div>
+
+                <div class="flex space-x-4">
+                    <button id="hint-btn" class="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 font-medium px-5 py-3 rounded-lg transition duration-200 flex items-center">
+                        <i class="fas fa-lightbulb mr-2"></i> Hint
+                    </button>
+                    <button id="next-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-medium px-5 py-3 rounded-lg transition duration-200 flex items-center">
+                        Next <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gray-50 border-t p-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-2 md:mb-0">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                        <i class="fas fa-shield-alt text-blue-600"></i>
+                    </div>
+                    <div>
+                        <div class="text-sm text-gray-600">Test Integrity</div>
+                        <div class="text-xs text-gray-500">Screen monitoring is active</div>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-500">
+                    <i class="far fa-clock mr-1"></i> No time limit
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Questions data
+        const questions = [
+            { question: "She agreed ___ us with the project.", options: ["to help", "helping"], answer: "to help", explanation: "\"Agree\" is followed by an infinitive (to + verb). The correct form is \"to help.\"", hint: "Think about verbs that typically take 'to + verb' after them." },
+            { question: "I can’t afford ___ a new phone right now.", options: ["to buy", "buying"], answer: "to buy", explanation: "\"Afford\" is followed by an infinitive. The correct form is \"to buy.\"", hint: "Remember: 'afford' is usually followed by 'to + verb'." },
+            { question: "He avoided ___ eye contact during the interview.", options: ["to make", "making"], answer: "making", explanation: "\"Avoid\" is followed by a gerund (verb + -ing). The correct form is \"making.\"", hint: "Some verbs are typically followed by verb+ing forms." },
+            { question: "They decided ___ early to catch the train.", options: ["to leave", "leaving"], answer: "to leave", explanation: "\"Decide\" is followed by an infinitive. The correct form is \"to leave.\"", hint: "Decision verbs usually take 'to + verb'." },
+            { question: "I suggest ___ the topic before the presentation.", options: ["to review", "reviewing"], answer: "reviewing", explanation: "\"Suggest\" is followed by a gerund. The correct form is \"reviewing.\"", hint: "Suggestion verbs often take verb+ing forms." },
+            { question: "We managed ___ all the tasks on time.", options: ["to complete", "completing"], answer: "to complete", explanation: "\"Manage\" is followed by an infinitive. The correct form is \"to complete.\"", hint: "Think about what follows achievement verbs." },
+            { question: "He denied ___ the vase.", options: ["to break", "breaking"], answer: "breaking", explanation: "\"Deny\" is followed by a gerund. The correct form is \"breaking.\"", hint: "Denial verbs typically take verb+ing forms." },
+            { question: "She promised ___ me with my homework.", options: ["to help", "helping"], answer: "to help", explanation: "\"Promise\" is followed by an infinitive. The correct form is \"to help.\"", hint: "Promise is a commitment verb that takes 'to + verb'." },
+            { question: "They postponed ___ the meeting until next week.", options: ["to have", "having"], answer: "having", explanation: "\"Postpone\" is followed by a gerund. The correct form is \"having.\"", hint: "Postponement/delay verbs usually take verb+ing." },
+            { question: "I want ___ more about history.", options: ["to learn", "learning"], answer: "to learn", explanation: "\"Want\" is followed by an infinitive. The correct form is \"to learn.\"", hint: "Desire verbs typically take 'to + verb'." },
+            { question: "He refused ___ the form.", options: ["to sign", "signing"], answer: "to sign", explanation: "\"Refuse\" is followed by an infinitive. The correct form is \"to sign.\"", hint: "Refusal verbs take 'to + verb'." },
+            { question: "I don’t mind ___ late sometimes.", options: ["to stay", "staying"], answer: "staying", explanation: "\"Mind\" is followed by a gerund. The correct form is \"staying.\"", hint: "'Mind' is one of those verbs that takes verb+ing." },
+            { question: "She failed ___ the exam again.", options: ["to pass", "passing"], answer: "to pass", explanation: "\"Fail\" is followed by an infinitive. The correct form is \"to pass.\"", hint: "Failure verbs typically take 'to + verb'." },
+            { question: "He considered ___ a new job.", options: ["to find", "finding"], answer: "finding", explanation: "\"Consider\" is followed by a gerund. The correct form is \"finding.\"", hint: "'Consider' takes verb+ing, not 'to + verb'." },
+            { question: "We hope ___ you again soon.", options: ["to see", "seeing"], answer: "to see", explanation: "\"Hope\" is followed by an infinitive. The correct form is \"to see.\"", hint: "Hope is a future-oriented verb that takes 'to + verb'." },
+            { question: "They arranged ___ at 9 a.m.", options: ["to meet", "meeting"], answer: "to meet", explanation: "\"Arrange\" is followed by an infinitive. The correct form is \"to meet.\"", hint: "Arrangement verbs usually take 'to + verb'." },
+            { question: "She risked ___ her passport.", options: ["to lose", "losing"], answer: "losing", explanation: "\"Risk\" is followed by a gerund. The correct form is \"losing.\"", hint: "Risk is a verb that takes verb+ing." },
+            { question: "I fancy ___ a trip to the mountains.", options: ["to take", "taking"], answer: "taking", explanation: "\"Fancy\" is followed by a gerund. The correct form is \"taking.\"", hint: "'Fancy' (British for 'would like') takes verb+ing." },
+            { question: "He offered ___ me to the airport.", options: ["to drive", "driving"], answer: "to drive", explanation: "\"Offer\" is followed by an infinitive. The correct form is \"to drive.\"", hint: "Offer verbs take 'to + verb'." },
+            { question: "I'm learning ___ French.", options: ["to speak", "speaking"], answer: "to speak", explanation: "\"Learn\" is followed by an infinitive. The correct form is \"to speak.\"", hint: "Learning verbs typically take 'to + verb'." },
+            { question: "I miss ___ time with my old friends.", options: ["to spend", "spending"], answer: "spending", explanation: "\"Miss\" is followed by a gerund. The correct form is \"spending.\"", hint: "Emotion/memory verbs often take verb+ing." },
+            { question: "He threatened ___ the police.", options: ["to call", "calling"], answer: "to call", explanation: "\"Threaten\" is followed by an infinitive. The correct form is \"to call.\"", hint: "Threat verbs take 'to + verb'." },
+            { question: "She tends ___ nervous when speaking in public.", options: ["to get", "getting"], answer: "to get", explanation: "\"Tend\" is followed by an infinitive. The correct form is \"to get.\"", hint: "'Tend' is a tendency verb that takes 'to + verb'." },
+            { question: "He imagined ___ in a castle.", options: ["to live", "living"], answer: "living", explanation: "\"Imagine\" is followed by a gerund. The correct form is \"living.\"", hint: "Imagination verbs take verb+ing." },
+            { question: "Don't forget ___ your keys.", options: ["to take", "taking"], answer: "to take", explanation: "\"Forget\" is followed by an infinitive. The correct form is \"to take.\"", hint: "Memory verbs can be tricky, but 'forget' takes 'to + verb' for future actions." }
+        ];
+
+        // Test state
+        let currentQuestion = 0;
+        let score = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let userAnswers = new Array(questions.length).fill(null);
+        let violations = 0;
+        let testStarted = false;
+        let lastFocusTime = Date.now();
+        let studentName = "";
+        let testStartedAt = null;
+        let testEndedAt = null;
+        let resultsSent = false;
+
+        // DOM Elements
+        const questionContainer = document.getElementById("question-container");
+        const feedback = document.getElementById("feedback");
+        const telegramStatus = document.getElementById("telegram-status");
+        const scoreDisplay = document.getElementById("score");
+        const progressDisplay = document.getElementById("progress");
+        const currentQuestionNum = document.getElementById("current-question-num");
+        const progressPercent = document.getElementById("progress-percent");
+        const progressFill = document.getElementById("progress-fill");
+        const correctCountDisplay = document.getElementById("correct-count");
+        const incorrectCountDisplay = document.getElementById("incorrect-count");
+        const focusStatus = document.getElementById("focus-status");
+        const prevBtn = document.getElementById("prev-btn");
+        const nextBtn = document.getElementById("next-btn");
+        const hintBtn = document.getElementById("hint-btn");
+        const startBtn = document.getElementById("start-test");
+        const testContainer = document.getElementById("test-container");
+        const instructionsModal = document.getElementById("instructions-modal");
+        const violationModal = document.getElementById("violation-modal");
+        const violationTitle = document.getElementById("violation-title");
+        const violationMessage = document.getElementById("violation-message");
+        const violationCountDisplay = document.getElementById("violation-count");
+        const closeViolationModal = document.getElementById("close-violation-modal");
+        const studentNameInput = document.getElementById("student-name");
+        const studentNameDisplay = document.getElementById("student-name-display");
+
+        function initTest() {
+            instructionsModal.classList.remove('hidden');
+            testContainer.classList.add('hidden');
+            updateScoreDisplay();
+            updateProgressDisplay();
+            updateStats();
+            updateFocusStatus();
+        }
+
+        startBtn.addEventListener('click', function() {
+            studentName = (studentNameInput.value || "").trim();
+            studentNameDisplay.textContent = studentName ? studentName : "—";
+
+            instructionsModal.classList.add('hidden');
+            testContainer.classList.remove('hidden');
+            testStarted = true;
+            testStartedAt = new Date().toISOString();
+            lastFocusTime = Date.now();
+
+            startFocusMonitoring();
+            renderQuestion();
+        });
+
+        function updateScoreDisplay() {
+            scoreDisplay.textCon
