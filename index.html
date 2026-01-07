@@ -19,16 +19,13 @@
     .violation-warning { animation: shake 0.5s; }
     @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
-    /* Mobile tap improvements */
     button, .tap {
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
 
-    /* Prevent iOS zoom on input focus by using 16px+ font size */
     input { font-size: 16px; }
 
-    /* Sticky bottom safe-area */
     .safe-bottom {
       padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
     }
@@ -180,15 +177,11 @@
       </div>
     </div>
 
-    <!-- Sticky mobile navigation -->
+    <!-- Sticky mobile navigation (NO HINT BUTTON) -->
     <div class="border-t bg-white/95 backdrop-blur sticky bottom-0 safe-bottom">
       <div class="p-3 sm:p-4 flex items-center justify-between gap-3">
         <button id="prev-btn" class="tap flex-1 bg-gray-200 hover:bg-gray-300 text-gray-900 font-bold px-4 py-3 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed" disabled>
           <i class="fas fa-arrow-left mr-2"></i> Prev
-        </button>
-
-        <button id="hint-btn" class="tap flex-1 bg-yellow-100 hover:bg-yellow-200 text-yellow-900 font-bold px-4 py-3 rounded-2xl">
-          <i class="fas fa-lightbulb mr-2"></i> Hint
         </button>
 
         <button id="next-btn" class="tap flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold px-4 py-3 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed">
@@ -201,31 +194,31 @@
   <script>
     // ---------------- QUESTIONS ----------------
     const questions = [
-      { question: "She agreed ___ us with the project.", options: ["to help", "helping"], answer: "to help", explanation: "\"Agree\" is followed by an infinitive (to + verb).", hint: "Agree → to + verb" },
-      { question: "I can’t afford ___ a new phone right now.", options: ["to buy", "buying"], answer: "to buy", explanation: "\"Afford\" is followed by an infinitive.", hint: "Afford → to + verb" },
-      { question: "He avoided ___ eye contact during the interview.", options: ["to make", "making"], answer: "making", explanation: "\"Avoid\" is followed by a gerund (verb + -ing).", hint: "Avoid → -ing" },
-      { question: "They decided ___ early to catch the train.", options: ["to leave", "leaving"], answer: "to leave", explanation: "\"Decide\" is followed by an infinitive.", hint: "Decide → to + verb" },
-      { question: "I suggest ___ the topic before the presentation.", options: ["to review", "reviewing"], answer: "reviewing", explanation: "\"Suggest\" is followed by a gerund.", hint: "Suggest → -ing" },
-      { question: "We managed ___ all the tasks on time.", options: ["to complete", "completing"], answer: "to complete", explanation: "\"Manage\" is followed by an infinitive.", hint: "Manage → to + verb" },
-      { question: "He denied ___ the vase.", options: ["to break", "breaking"], answer: "breaking", explanation: "\"Deny\" is followed by a gerund.", hint: "Deny → -ing" },
-      { question: "She promised ___ me with my homework.", options: ["to help", "helping"], answer: "to help", explanation: "\"Promise\" is followed by an infinitive.", hint: "Promise → to + verb" },
-      { question: "They postponed ___ the meeting until next week.", options: ["to have", "having"], answer: "having", explanation: "\"Postpone\" is followed by a gerund.", hint: "Postpone → -ing" },
-      { question: "I want ___ more about history.", options: ["to learn", "learning"], answer: "to learn", explanation: "\"Want\" is followed by an infinitive.", hint: "Want → to + verb" },
-      { question: "He refused ___ the form.", options: ["to sign", "signing"], answer: "to sign", explanation: "\"Refuse\" is followed by an infinitive.", hint: "Refuse → to + verb" },
-      { question: "I don’t mind ___ late sometimes.", options: ["to stay", "staying"], answer: "staying", explanation: "\"Mind\" is followed by a gerund.", hint: "Mind → -ing" },
-      { question: "She failed ___ the exam again.", options: ["to pass", "passing"], answer: "to pass", explanation: "\"Fail\" is followed by an infinitive.", hint: "Fail → to + verb" },
-      { question: "He considered ___ a new job.", options: ["to find", "finding"], answer: "finding", explanation: "\"Consider\" is followed by a gerund.", hint: "Consider → -ing" },
-      { question: "We hope ___ you again soon.", options: ["to see", "seeing"], answer: "to see", explanation: "\"Hope\" is followed by an infinitive.", hint: "Hope → to + verb" },
-      { question: "They arranged ___ at 9 a.m.", options: ["to meet", "meeting"], answer: "to meet", explanation: "\"Arrange\" is followed by an infinitive.", hint: "Arrange → to + verb" },
-      { question: "She risked ___ her passport.", options: ["to lose", "losing"], answer: "losing", explanation: "\"Risk\" is followed by a gerund.", hint: "Risk → -ing" },
-      { question: "I fancy ___ a trip to the mountains.", options: ["to take", "taking"], answer: "taking", explanation: "\"Fancy\" is followed by a gerund.", hint: "Fancy → -ing" },
-      { question: "He offered ___ me to the airport.", options: ["to drive", "driving"], answer: "to drive", explanation: "\"Offer\" is followed by an infinitive.", hint: "Offer → to + verb" },
-      { question: "I'm learning ___ French.", options: ["to speak", "speaking"], answer: "to speak", explanation: "\"Learn\" is followed by an infinitive.", hint: "Learn → to + verb" },
-      { question: "I miss ___ time with my old friends.", options: ["to spend", "spending"], answer: "spending", explanation: "\"Miss\" is followed by a gerund.", hint: "Miss → -ing" },
-      { question: "He threatened ___ the police.", options: ["to call", "calling"], answer: "to call", explanation: "\"Threaten\" is followed by an infinitive.", hint: "Threaten → to + verb" },
-      { question: "She tends ___ nervous when speaking in public.", options: ["to get", "getting"], answer: "to get", explanation: "\"Tend\" is followed by an infinitive.", hint: "Tend → to + verb" },
-      { question: "He imagined ___ in a castle.", options: ["to live", "living"], answer: "living", explanation: "\"Imagine\" is followed by a gerund.", hint: "Imagine → -ing" },
-      { question: "Don't forget ___ your keys.", options: ["to take", "taking"], answer: "to take", explanation: "\"Forget\" + to-infinitive for future action.", hint: "Forget (future) → to + verb" }
+      { question: "She agreed ___ us with the project.", options: ["to help", "helping"], answer: "to help", explanation: "\"Agree\" is followed by an infinitive (to + verb)." },
+      { question: "I can’t afford ___ a new phone right now.", options: ["to buy", "buying"], answer: "to buy", explanation: "\"Afford\" is followed by an infinitive." },
+      { question: "He avoided ___ eye contact during the interview.", options: ["to make", "making"], answer: "making", explanation: "\"Avoid\" is followed by a gerund (verb + -ing)." },
+      { question: "They decided ___ early to catch the train.", options: ["to leave", "leaving"], answer: "to leave", explanation: "\"Decide\" is followed by an infinitive." },
+      { question: "I suggest ___ the topic before the presentation.", options: ["to review", "reviewing"], answer: "reviewing", explanation: "\"Suggest\" is followed by a gerund." },
+      { question: "We managed ___ all the tasks on time.", options: ["to complete", "completing"], answer: "to complete", explanation: "\"Manage\" is followed by an infinitive." },
+      { question: "He denied ___ the vase.", options: ["to break", "breaking"], answer: "breaking", explanation: "\"Deny\" is followed by a gerund." },
+      { question: "She promised ___ me with my homework.", options: ["to help", "helping"], answer: "to help", explanation: "\"Promise\" is followed by an infinitive." },
+      { question: "They postponed ___ the meeting until next week.", options: ["to have", "having"], answer: "having", explanation: "\"Postpone\" is followed by a gerund." },
+      { question: "I want ___ more about history.", options: ["to learn", "learning"], answer: "to learn", explanation: "\"Want\" is followed by an infinitive." },
+      { question: "He refused ___ the form.", options: ["to sign", "signing"], answer: "to sign", explanation: "\"Refuse\" is followed by an infinitive." },
+      { question: "I don’t mind ___ late sometimes.", options: ["to stay", "staying"], answer: "staying", explanation: "\"Mind\" is followed by a gerund." },
+      { question: "She failed ___ the exam again.", options: ["to pass", "passing"], answer: "to pass", explanation: "\"Fail\" is followed by an infinitive." },
+      { question: "He considered ___ a new job.", options: ["to find", "finding"], answer: "finding", explanation: "\"Consider\" is followed by a gerund." },
+      { question: "We hope ___ you again soon.", options: ["to see", "seeing"], answer: "to see", explanation: "\"Hope\" is followed by an infinitive." },
+      { question: "They arranged ___ at 9 a.m.", options: ["to meet", "meeting"], answer: "to meet", explanation: "\"Arrange\" is followed by an infinitive." },
+      { question: "She risked ___ her passport.", options: ["to lose", "losing"], answer: "losing", explanation: "\"Risk\" is followed by a gerund." },
+      { question: "I fancy ___ a trip to the mountains.", options: ["to take", "taking"], answer: "taking", explanation: "\"Fancy\" is followed by a gerund." },
+      { question: "He offered ___ me to the airport.", options: ["to drive", "driving"], answer: "to drive", explanation: "\"Offer\" is followed by an infinitive." },
+      { question: "I'm learning ___ French.", options: ["to speak", "speaking"], answer: "to speak", explanation: "\"Learn\" is followed by an infinitive." },
+      { question: "I miss ___ time with my old friends.", options: ["to spend", "spending"], answer: "spending", explanation: "\"Miss\" is followed by a gerund." },
+      { question: "He threatened ___ the police.", options: ["to call", "calling"], answer: "to call", explanation: "\"Threaten\" is followed by an infinitive." },
+      { question: "She tends ___ nervous when speaking in public.", options: ["to get", "getting"], answer: "to get", explanation: "\"Tend\" is followed by an infinitive." },
+      { question: "He imagined ___ in a castle.", options: ["to live", "living"], answer: "living", explanation: "\"Imagine\" is followed by a gerund." },
+      { question: "Don't forget ___ your keys.", options: ["to take", "taking"], answer: "to take", explanation: "\"Forget\" + to-infinitive for future action." }
     ];
 
     // ---------------- STATE ----------------
@@ -242,7 +235,6 @@
     let testEndedAt = null;
     let resultsSent = false;
 
-    // Detect mobile
     const IS_MOBILE = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
     // ---------------- DOM ----------------
@@ -259,7 +251,6 @@
     const focusStatus = document.getElementById("focus-status");
     const prevBtn = document.getElementById("prev-btn");
     const nextBtn = document.getElementById("next-btn");
-    const hintBtn = document.getElementById("hint-btn");
     const startBtn = document.getElementById("start-test");
     const testContainer = document.getElementById("test-container");
     const instructionsModal = document.getElementById("instructions-modal");
@@ -331,7 +322,6 @@
 
     function renderQuestion() {
       const q = questions[currentQuestion];
-
       const answered = userAnswers[currentQuestion] !== null;
 
       let html = `
@@ -397,7 +387,6 @@
 
       questionContainer.innerHTML = html;
 
-      // attach taps
       document.querySelectorAll("#options-grid button").forEach(btn => {
         btn.addEventListener("click", () => {
           const idx = Number(btn.getAttribute("data-option-index"));
@@ -455,26 +444,9 @@
           </div>
         </div>`;
       }
-      // don’t force scroll on phones (annoying). only on larger screens
-      if (!IS_MOBILE) feedback.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 
-    hintBtn.addEventListener("click", () => {
-      if (userAnswers[currentQuestion] !== null) return;
-      const q = questions[currentQuestion];
-      feedback.classList.remove("hidden");
-      feedback.className = "mt-4 p-4 rounded-2xl border bg-yellow-50 border-yellow-200";
-      feedback.innerHTML = `<div class="flex gap-3">
-        <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
-          <i class="fas fa-lightbulb text-yellow-600"></i>
-        </div>
-        <div>
-          <h3 class="font-extrabold text-yellow-800">Hint</h3>
-          <p class="text-yellow-700">${escapeHtml(q.hint)}</p>
-        </div>
-      </div>`;
-    });
-
+    // Navigation
     prevBtn.addEventListener("click", () => {
       if (currentQuestion > 0) {
         currentQuestion--;
@@ -536,7 +508,6 @@
 
       prevBtn.disabled = true;
       nextBtn.disabled = true;
-      hintBtn.disabled = true;
       feedback.classList.add("hidden");
       stopFocusMonitoring();
 
@@ -547,8 +518,7 @@
       currentQuestion = 0;
       prevBtn.disabled = false;
       nextBtn.disabled = false;
-      hintBtn.disabled = false;
-      resultsSent = false; // allow re-send only if you want; keep false if not
+      resultsSent = false;
       renderQuestion();
     };
 
@@ -636,7 +606,6 @@
     function startFocusMonitoring() {
       document.addEventListener("visibilitychange", handleVisibilityChange);
 
-      // On phones, blur triggers too often (keyboard/call/notifications), so ignore it.
       if (!IS_MOBILE) {
         window.addEventListener("blur", handleWindowBlur);
         window.focusCheckInterval = setInterval(checkFocusTime, 1000);
@@ -733,7 +702,6 @@
 
       prevBtn.disabled = true;
       nextBtn.disabled = true;
-      hintBtn.disabled = true;
       feedback.classList.add("hidden");
 
       await sendResultsToTelegram({ terminated: true });
@@ -741,7 +709,6 @@
 
     closeViolationModal.addEventListener("click", () => violationModal.classList.add("hidden"));
 
-    // Helpers
     function escapeHtml(str) {
       return String(str)
         .replace(/&/g, "&amp;")
@@ -751,7 +718,6 @@
         .replace(/'/g, "&#039;");
     }
 
-    // Start
     initTest();
   </script>
 </body>
